@@ -15,14 +15,23 @@ template< typename T, typename... Ts>
 Record<T, Ts...>::Record(T t, Ts... ts) : Record<Ts...>(ts...), entry_(t) {}
 
 template< typename T, typename... Ts>
-template< typename... T2s > Record<T, Ts...>::Record(const Record< T2s... > & src) : entry_(src.Head()), Record<Ts...>(src.Tail()) {}  
-
+template< typename... T2s > Record<T, Ts...>::Record(const Record< T2s... > & src) : Record<Ts...>(src.Tail()), entry_(src.Head()) {}  
+/*
 template< typename T, typename... Ts>
 template< typename... T2s > Record<T, Ts...> & Record<T, Ts...>::operator=(const Record<T2s...> & src) {
   if ( this != &src ) {
     entry_ = src.Head();
     *this = src.Tail();
   }
+}
+*/
+template< typename T, typename... Ts>
+Record<T, Ts...> & Record<T, Ts...>::operator=(const Record<T, Ts...> & src) {
+  if ( this != &src ) {
+    entry_ = src.Head();
+    *this = src.Tail();
+  }
+  return *this;
 }
 
 template< typename T, typename... Ts>

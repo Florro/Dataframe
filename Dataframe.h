@@ -11,14 +11,55 @@
 
 #include <type_traits>
 
-template< typename... Ts > struct Record {};
+template< typename... Ts > struct Record {
+  
+  //const T& Head(void) const {}
+  //T & Head(void) {}
+  
+  const Record<> & Tail(void) const {return *this; }
+  Record<> & Tail(void) {return *this; }
+  
+  virtual ~Record(void) { }
+  
+};
+/*
+template<> struct Record<int> {
+  
+  Record(int t) : entry_(t) {}
+  const int & Head(void) const  { return entry_; }
+  int & Head(void) { return entry_; }
+  
+  //const Record<> & Tail(void) const;
+  //Record<> & Tail(void);
+  
+  virtual ~Record(void) {}
+private:
+  int entry_;
+  
+};
+*/
+/*
+template< typename T, typename... Ts > struct Record<T> : Record<Ts...> {
+  Record(T t) : entry_(t) {}
+  virtual ~Record(void) {}
+  const T & Head(void) const { return entry_; }
+  T & Head(void) { return entry_; }
+  const Record<> & Tail(void) {}
+  Record<> & Tail(void) {}
+  
+private:
+  T entry_;
+}
+*/
+
 
 template< typename T, typename... Ts > struct Record<T, Ts...> : Record<Ts...> {
 
 public:
   Record(T t, Ts... ts);
   template< typename... T2s > Record(const Record< T2s... > & src); 
-  template< typename... T2s > Record<T, Ts...> & operator=(const Record<T2s...> & src);
+  Record<T, Ts...> & operator=(const Record<T, Ts...> & src);
+  //template< typename... T2s > Record<T, Ts...> & operator=(const Record<T2s...> & src);
   
   const T& Head(void) const;
   T & Head(void);

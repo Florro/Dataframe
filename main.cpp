@@ -6,27 +6,41 @@
 
 
 
-
-bool compare(const Record<const float*, const float &, const int &> & a, const Record<const float*, const float &, const int &> & b ) {
-  return true; //get<1>(a) < get<1>(b);
+bool compare(Record<const float*, const float &, const int &> a, Record<const float*, const float &, const int &> b ) {
+  return get<1>(a) < get<1>(b);
 }
 
-
+/*
+bool compare(const Record<const float*, const float &, const int &> & a, const Record<const float*, const float &, const int &> & b ) {
+  //std::cout << get<1>(a) << " " << get<1>(b) << std::endl;
+  return get<1>(a) < get<1>(b);
+}
+*/
 struct myss {
   bool operator()(Record<const float*, const float &, const int &> & a, Record<const float*, const float &, const int &> & b) {
-    return true;
+    return get<1>(a) < get<1>(b);;
   }
 };
 /*
 template< typename... Ts>
 inline bool operator==(const Record<Ts...>&, const Record<Ts...>&) { return true; }
 */
+/*
 inline bool operator==(const Record<>&, const Record<>&) { return true; }
 
 template< typename T1, typename... T1s, typename T2, typename... T2s > 
 inline bool operator==(const Record<T1, T1s...> & a, const Record<T2, T2s...> & b) {
   return a.Head() == b.Head() && a.Tail() == b.Tail();
 }
+
+
+inline bool operator<(const Record<>&, const Record<>&) { return true; }
+
+template< typename T1, typename... T1s, typename T2, typename... T2s > 
+inline bool operator<(const Record<T1, T1s...> & a, const Record<T2, T2s...> & b) {
+  return a.Head() < b.Head() && a.Tail() < b.Tail();
+}
+*/
 
 //inline bool compare(const Record<>&, const Record<>&) { return true; }
 /*
@@ -83,9 +97,21 @@ int main(void){
 
   //myss sorter;
   
+  //std::sort(x2.begin(), x2.end(), tester);
+  
+  //std::sort(data.begin(), data.end());
   std::sort(data.begin(), data.end(), compare);
+  //std::sort(data.begin(), data.end(), static_cast<bool (*comparer_t)(const T*, const T*)>(&compare));
   
   
+  std::cout << "here" << std::endl;
+  //std::cout << (data[0] == data[2]) << " " << compare(data[0], data[0]) << " " << compare(data[0], data[1]) << std::endl;
+  
+  
+  Record<const float*, const float &, const int &> s(data[0]);
+  std::cout << get<0>(s) << " " << get<1>(s) << " " << get<2>(s) << std::endl;
+  std::cout << get<0>(data[0]) << " " << get<1>(data[0]) << " " << get<2>(data[0]) << std::endl;
+
   
   free(x3);
   printf("Exit Success!\n");
