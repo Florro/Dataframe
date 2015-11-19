@@ -7,7 +7,7 @@ all: $(TARGET)
 
 OBJS = Dataframe.o
 
-$(TARGET): main.cpp Dataframe.h Dataframe-inl.h
+$(TARGET): main.cpp Dataframe.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 %.cpp.o : 

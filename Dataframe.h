@@ -9,154 +9,18 @@
 #ifndef DATAFRAME_H_
 #define DATAFRAME_H_
 
-#include <type_traits>
+#include "Feature.h"
 
-template< typename... Ts > struct Record {
-  
-  //const T& Head(void) const {}
-  //T & Head(void) {}
-  
-  const Record<> & Tail(void) const {return *this; }
-  Record<> & Tail(void) {return *this; }
-  
-  virtual ~Record(void) { }
-  
-};
-/*
-template<> struct Record<int> {
-  
-  Record(int t) : entry_(t) {}
-  const int & Head(void) const  { return entry_; }
-  int & Head(void) { return entry_; }
-  
-  //const Record<> & Tail(void) const;
-  //Record<> & Tail(void);
-  
-  virtual ~Record(void) {}
-private:
-  int entry_;
-  
-};
-*/
-/*
-template< typename T, typename... Ts > struct Record<T> : Record<Ts...> {
-  Record(T t) : entry_(t) {}
-  virtual ~Record(void) {}
-  const T & Head(void) const { return entry_; }
-  T & Head(void) { return entry_; }
-  const Record<> & Tail(void) {}
-  Record<> & Tail(void) {}
-  
-private:
-  T entry_;
-}
-*/
-
-
-template< typename T, typename... Ts > struct Record<T, Ts...> : Record<Ts...> {
-
+struct Dataframe {
 public:
-  Record(T t, Ts... ts);
-  template< typename... T2s > Record(const Record< T2s... > & src); 
-  Record<T, Ts...> & operator=(const Record<T, Ts...> & src);
-  //template< typename... T2s > Record<T, Ts...> & operator=(const Record<T2s...> & src);
-  
-  const T& Head(void) const;
-  T & Head(void);
-  
-  const Record<Ts...> & Tail(void) const;
-  Record<Ts...> & Tail(void);
-  
-  virtual ~Record(void);
-
-private:
-  T entry_;
-};
-
-//############################################
-
-
-template <unsigned int k, typename... Ts> struct elem_type_holder {};
- 
-template< typename T , typename... Ts > struct elem_type_holder<0, Record<T, Ts...> > {
-  typedef T type;
-};
-
-template <unsigned int k, typename T, typename... Ts > struct elem_type_holder<k, Record<T, Ts...> > {
-  typedef typename elem_type_holder< k - 1, Record<Ts...> >::type type;
-};
-
-//#####################################################
-
-template < unsigned int k, typename... Ts >
-typename std::enable_if<k == 0, typename elem_type_holder<0, Record<Ts...>>::type&>::type get(Record<Ts...>& t) { return t.Head(); }
-
-template < unsigned int k, typename T, typename... Ts > 
-typename std::enable_if<k != 0, typename elem_type_holder<k, Record<T, Ts...>>::type&>::type get(Record<T, Ts...>& t) { 
-  Record<Ts...> & base = t;
-  return get<k - 1>(base);
-}
-
-//template < typename Ts... > typename std::enable_if<k == 0, typename elem_type_holder<0, Record<Ts...>>::type&>::type operator[](unsigned int k){ return t.Entry(); }
-
-
-/*
-template <unsigned int k, class... Ts> struct elem_type_holder {};
-
-template <class T, class... Ts>
-struct elem_type_holder<0, Record<T, Ts...>> {
-  typedef T type;
-};
-
-template <unsigned int k, class T, class... Ts>
-struct elem_type_holder<k, Record<T, Ts...>> {
-  typedef typename elem_type_holder<k - 1, Record<Ts...>>::type type;
-};
-*/
-#include "Dataframe-inl.h"
-
-
-
-
-
-/*
-#include <map>
-#include <string>
-template< template < typename T > class... Ts > struct Record {};
-
-template< template < typename T1 > class T, template < typename T2 > class... Ts > struct Record <T, Ts...> : Record<Ts...> {
-  
-public:
-  Record(T t, Ts... ts) : Record<Ts...>(ts...), entry_(t) {}
+  Dataframe(void);
+  virtual ~Dataframe(void);
   
 private:
+
+  std::vector<Feature<>*> entries_;
   
-  entry_;
-  
-};
-*/
-/*
-template< typename... Ts > struct Record {};
-
-template< typename T, typename... Ts > struct Record<std::map, T, Ts...> : Record<Ts...> {
-
-public:
-  Record(T t, Ts... ts) : Record<Ts...>(ts...), entry_(t) {}
-private:
-  T entry_;
-};
-
-*/
-/*
-#include <map>
-
-template< template < typename... > class Container, typename ... Ts > struct Record {};
-
-template< typename ... Ts > struct Record < std::map, Ts... > {
-
-public: 
   
 };
-*/
 
 #endif // DATAFRAME_H_
